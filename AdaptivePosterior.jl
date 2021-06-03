@@ -24,13 +24,6 @@ function MCMC(path, basis_fnc, iter; j0, z0, s_sq0, alpha, A, B, C)
     N = j0
     
     init_basis = [basis_fnc(k) for k in 1:N]
-    #init_basis = [basis_fnc(k) for k in 0:(N-1)]
-    
-    Lambda_inv = Diagonal([k^(2.0 * alpha + 1.0) for k in 1:N])    
-    mu = giraVector(path, init_basis)
-    sig = giraMatrix(path, init_basis)
-    
-    
     W = sig + (1/s_sq0) * Lambda_inv
     
     
@@ -44,7 +37,6 @@ function MCMC(path, basis_fnc, iter; j0, z0, s_sq0, alpha, A, B, C)
 
     
     @showprogress for i in 1:iter
-        # works when changed to ordinary gamma. change scale
         s_sq = 1 / rand(Gamma(A + (1/2)j, (B + (1/2)z' * Lambda_inv[1:j, 1:j] * z )^(-1) ))
         push!(s_sq_chain, s_sq)
         
