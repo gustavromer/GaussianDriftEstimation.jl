@@ -207,5 +207,5 @@ function figure2()
   plot!(p6, x, vec(H[1]), label = "Frequentist Coverage")
   hline!(p6, x, [0.95], linestyle = :dash, linecolor = :black, label = "Bayesian Posterior Coverage",ylims = (0.875,1.0))
 
-   return (p1,p2,emp_bayes_ests, over_smooth_ests, under_smooth_ests, scaled_ests, p4, p5, p6) 
+  return (p1,p2,emp_bayes_ests, over_smooth_ests, under_smooth_ests, scaled_ests, p4, p5, p6) 
 end  
