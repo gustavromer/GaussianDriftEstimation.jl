@@ -209,3 +209,7 @@ function figure2()
 
   return (p1,p2,emp_bayes_ests, over_smooth_ests, under_smooth_ests, scaled_ests, p4, p5, p6) 
 end  
+  
+  
+  
+  
