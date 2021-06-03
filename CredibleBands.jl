@@ -71,7 +71,6 @@ function emp_bayes_band(mu, basis, x, mod; p = 0.95, N = 10^3,  marg = false)
         
         samps[i, :] = rand(post).(x) - mean(post).(x)
         
-         # update progress
         next!(prog)
     end
     
@@ -98,7 +97,6 @@ function emp_check_cov(theta, x, mod, sde, basis;  N = 10^3)
         push!(sim_cov, all(dist .< sim_margin))
         point_cov[i,:] = dist .< point_margin
         
-        # update progress
         next!(prog)
     end
     
