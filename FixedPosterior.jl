@@ -92,20 +92,20 @@ end
 # Plots posterior mean along with credible bands.  
 function post_plot(post_mean, post_var; a = 0.05, scale = true)
     
-# calculating pointwise credibility band
+    # calculating pointwise credible band
     pointwise_CB = point_band(post_var, p = 1 -a)
-    # calculating sim credibility band
+    # calculating sim credible band
     joint_rect = simul_band(post_var, scale = scale, p = 1 - a)
     
     p = plot()
-    # plotting mean and pointwise CB
+    # plotting mean and pointwise credible band
     plot!(p, x, post_mean, 
         ribbon = pointwise_CB, 
         label = "Posterior Mean", 
         fillalpha=.2,
         linecolor  = :black,
         fillcolor = :red)
-    # plotting simultaneous CB
+    # plotting simultaneous credible band
     plot!(p, x, [post_mean + joint_rect, post_mean - joint_rect], 
         linecolor  = :red,
         linestyle = :dash,
