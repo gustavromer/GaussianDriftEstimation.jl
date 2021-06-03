@@ -28,7 +28,6 @@ function giraMatrix(path, basis)
     
    for i in 1:N
        for j in i:N
-           #Sig[i,j] = sum(basis[i].(x_vals) .* basis[j].(x_vals) * dt)
            Sig[i,j] = matrixElement(x_vals, basis[i], basis[j], dt)
        end
    end
@@ -50,7 +49,6 @@ function giraVector(path, basis)
    m = Array{Float64}(undef, N) 
     
    for i in 1:N
-       #m[i] = sum(basis[i].(x_vals[1:(length(x_vals)-1)]) .* diff(x_vals))
        m[i] = vectorElement(x_vals, basis[i])
    end
     
@@ -66,9 +64,6 @@ end
   
 function post_from_data(mod, path, basis; alpha = 0.7, s = 1.0)
     N = length(basis)
-   
-    #d = GaussianVector(sparse(Diagonal([s * k^(-alpha -0.5) for k in 1:N])))
-    #prior = GaussianProcess(basis, d)
     
     prior = prior_dist(s, alpha, basis)
     
