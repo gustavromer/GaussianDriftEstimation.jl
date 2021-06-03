@@ -1,4 +1,4 @@
-
+# specifies Fourier ONS on [0,1]
 function unit_fourier(k)
   sqrt_two = sqrt(2.0) 
   if k == 0
@@ -10,6 +10,7 @@ function unit_fourier(k)
   end
 end
 
+# specifies Fourier ONS on [0, 2pi]
 function rad_fourier(k)
   if k == 0
     return x -> 1/ sqrt(2pi)
