@@ -59,4 +59,6 @@ function figure3()
     plot!(p5, x, f[1850-i,:], label = "", linestyle = :dash)
   end    
   plot!(p5, x, theta, linecolor = :blue, label = "True Drift")
+  
+  return (p1,p2,p3,p4,p5)
 end
