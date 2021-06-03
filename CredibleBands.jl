@@ -77,7 +77,7 @@ function emp_bayes_band(mu, basis, x, mod; p = 0.95, N = 10^3,  marg = false)
     return sim_simul_band(samps, zeros(length(x)), p = p, marg = marg)
 end    
               
-# Calculates coverage of credible bands from empirical bayes method. Empirical Bayes.               
+# Calculates coverage of credible bands from empirical bayes method.           
 function emp_check_cov(theta, x, mod, sde, basis;  N = 10^3)
     
     obs_theta = theta.(x)
@@ -104,6 +104,7 @@ function emp_check_cov(theta, x, mod, sde, basis;  N = 10^3)
 end
 
 
+# Check coverage of credible bands based on a fixed prior.                           
 function check_cov(theta, s, alpha, x, mod, sde, basis;  N = 10^3)
     
     obs_theta = theta.(x)
