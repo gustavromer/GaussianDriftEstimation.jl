@@ -1,4 +1,4 @@
-import Roots, Random, Distributions,BayesianNonparametricStatistics,LinearAlgebra, SparseArrays , Plots, Optim, LaTeXStrings, ProgressMeter, StatsBase
+import Roots, Random, Distributions,BayesianNonparametricStatistics,LinearAlgebra, SparseArrays , Plots, Optim, LaTeXStrings, ProgressMeter, StatsBase, DelimitedFiles
 
 include('Basis.jl')
 include('CredibleBands.jl')
