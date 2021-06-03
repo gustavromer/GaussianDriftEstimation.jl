@@ -1,20 +1,4 @@
-function func_from_coeffs(z_array, basis, x)
-    
-    M = maximum(length.(z_array))
-    
-    basis_matrix = [basis(k).(x0) for x0 in x, k in 1:M] 
-    
-    res = zeros(length(z_array), length(x))
-    
-    for i in 1:length(z_array)
-        z = z_array[i]
-        res[i,:] = basis_matrix[:, 1:length(z)] * z
-    end    
-    
-    return res
-end   
-
-
+# Runs MCMC based on proposal q(i +- 1 | i) = 1/4, q(i|i) = 1/2
 function MCMC(path, basis_fnc, iter; j0, z0, s_sq0, alpha, A, B, C) 
     
     x_vals = path.samplevalues
@@ -26,6 +10,7 @@ function MCMC(path, basis_fnc, iter; j0, z0, s_sq0, alpha, A, B, C)
     init_basis = [basis_fnc(k) for k in 1:N]
     W = sig + (1/s_sq0) * Lambda_inv
     
+    # Initialization
     
     j_chain = [j0]
     z_chain = [z0]
@@ -37,11 +22,13 @@ function MCMC(path, basis_fnc, iter; j0, z0, s_sq0, alpha, A, B, C)
 
     
     @showprogress for i in 1:iter
+        # Gibbs sampler for s^2
         s_sq = 1 / rand(Gamma(A + (1/2)j, (B + (1/2)z' * Lambda_inv[1:j, 1:j] * z )^(-1) ))
         push!(s_sq_chain, s_sq)
         
-        # expand current basis if j increases
+        # MH step for J
         j_it = sample([j - 1, j, j + 1], Weights([0.25, 0.5, 0.25]), 1)[1]
+        # Expand current basis if j increases
         if j_it > j
             new_N = N + 10
             
@@ -73,6 +60,7 @@ function MCMC(path, basis_fnc, iter; j0, z0, s_sq0, alpha, A, B, C)
         
         mu_it = mu[1:j_it]
         
+        # Gibbs sampler for z_1,...,z_J
         z_it = rand(MvNormal(inv_W_it * mu_it, Symmetric(inv_W_it)))
                 
         rest = sign(j_it - j) * (2alpha + 1) * log(max(j, j_it)) + (j - j_it) * log(s_sq)
@@ -80,9 +68,10 @@ function MCMC(path, basis_fnc, iter; j0, z0, s_sq0, alpha, A, B, C)
             (mu[1:j]' * inv_W * mu[1:j] - logdet(W[1:j, 1:j])) + rest)
             
         logR_it = C * (j_it - j)
-    
+        
         accept_p = exp(logB_it + logR_it)
-            
+        
+        # Acceptance / Rejection step
         if rand(Uniform()) < accept_p
             j = j_it     
             z = z_it
@@ -95,6 +84,25 @@ function MCMC(path, basis_fnc, iter; j0, z0, s_sq0, alpha, A, B, C)
     return (j_chain, z_chain, s_sq_chain)        
 end
 
+# Calculates implied posterior realizations from MCMC
+function func_from_coeffs(z_array, basis, x)
+    
+    M = maximum(length.(z_array))
+    
+    basis_matrix = [basis(k).(x0) for x0 in x, k in 1:M] 
+    
+    res = zeros(length(z_array), length(x))
+    
+    for i in 1:length(z_array)
+        z = z_array[i]
+        res[i,:] = basis_matrix[:, 1:length(z)] * z
+    end    
+    
+    return res
+end   
+
+
+# Returns (1/2) log p(X^T) given s and alpha
 function likelog(G_vec, G_matrix; s = 1, alpha = 1.5)
     N = length(G_vec)
     Lambda = Diagonal([s^2 * k^(-2.0 * alpha - 1.0) for k in 1:N])
@@ -106,6 +114,7 @@ function likelog(G_vec, G_matrix; s = 1, alpha = 1.5)
     
 end
 
+# Calculates the empirical bayes estimator
 function empBayes(path, basis)
     G_vec = giraVector(path, basis)
     G_matrix = giraMatrix(path, basis)
