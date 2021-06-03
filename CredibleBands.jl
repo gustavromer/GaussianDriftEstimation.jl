@@ -1,9 +1,10 @@
-
+# Calculates pointwise confidence bands based on covariance matrix.
 function point_band(sig; p = 0.95)
    a = 1-p
    quantile(Normal(), 1 - a/2) * sqrt.(diag(sig))
 end
 
+# Calculates simultaneous confidence bands by grid-approximation based on covariance matrix.
 function simul_band(sig; p = 0.95, scale = true, N = 10^5, step = 0.01, max = 50)
     sig = Symmetric(sig)
     d = MvNormal(sig)
@@ -22,7 +23,8 @@ function simul_band(sig; p = 0.95, scale = true, N = 10^5, step = 0.01, max = 50
     return R * rect
     
 end
-  
+
+# Calculates credible margin around specified posterior mean using samples.   
 function sim_simul_band(samps, mu_vec; p = 0.95, marg = false)
     N = size(samps, 1)
     dists = [maximum(abs.(samps[i, :] - mu_vec)) for i in 1:N]
@@ -31,7 +33,6 @@ function sim_simul_band(samps, mu_vec; p = 0.95, marg = false)
     res = hcat(vec(minimum(used_samps, dims =1)), vec(maximum(used_samps, dims =1)))
         
     if marg    
-    # Add marginal bands
     a = 1 - p
     obs = size(samps, 2)
     res = (Transpose(hcat([quantile(samps[: , j], [a/2, 1 - a/2]) for j in 1:obs]...)), res)
@@ -41,22 +42,20 @@ function sim_simul_band(samps, mu_vec; p = 0.95, marg = false)
     return res    
 end  
         
-        
+# Simulates from posterior and calculates credible bands based on simulations.        
 function fixed_band(post, x; p = 0.95, N = 10^3, marg = false)
     samps = [rand(post).(x0) for i in 1:N, x0 in x]
     mu_vec = mean(post).(x)
     return sim_simul_band(samps,mu_vec, p = p, marg = marg)
 end 
           
-          
+# Calculates credible bands for empirical bayes using empirical distribution on (alpha, s).          
 function emp_bayes_band(mu, basis, x, mod; p = 0.95, N = 10^3,  marg = false)
-    
-    # We are reusing the path
-    
     samps = zeros(N, length(x))
     
     sde = SDE(mu, mod)
-    
+    or_path = rand(sde)
+                  
     prog = Progress(N)
     Threads.@threads for i in 1:N
         path = rand(sde)
@@ -64,7 +63,7 @@ function emp_bayes_band(mu, basis, x, mod; p = 0.95, N = 10^3,  marg = false)
         bayes_est = empBayes(path, basis)
         
         post = post_from_data(mod, 
-            path, 
+            or_path, 
             basis, 
             alpha = bayes_est[2],  
             s = bayes_est[1])
@@ -79,7 +78,7 @@ function emp_bayes_band(mu, basis, x, mod; p = 0.95, N = 10^3,  marg = false)
     return sim_simul_band(samps, zeros(length(x)), p = p, marg = marg)
 end    
               
-              
+# Calculates coverage of credible bands from empirical bayes method. Empirical Bayes.               
 function emp_check_cov(theta, x, mod, sde, basis;  N = 10^3)
     
     obs_theta = theta.(x)
