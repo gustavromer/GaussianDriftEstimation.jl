@@ -1,11 +1,14 @@
+# Calculates S_ij
 function matrixElement(x_vals, b1, b2, dt)
     return sum(b1.(x_vals) .* b2.(x_vals) * dt)
 end
 
+# Calculates m_i
 function vectorElement(x_vals, b)
     return sum(b.(x_vals[1:(length(x_vals)-1)]) .* diff(x_vals))
 end    
 
+# Calculates A_n    
 function phi_matrix(x, basis)
     res = zeros(length(x), length(basis));
     for i in 1:length(x)
@@ -16,7 +19,8 @@ function phi_matrix(x, basis)
     
     return res
 end
-  
+
+# Calculates S    
 function giraMatrix(path, basis)
    t_int = path.timeinterval
    x_vals = path.samplevalues
@@ -38,7 +42,7 @@ function giraMatrix(path, basis)
 end
 
 
-
+# Calculates m 
 function giraVector(path, basis)
 
    t_int = path.timeinterval
@@ -55,13 +59,15 @@ function giraVector(path, basis)
    return m
 end  
 
+# Specifies prior in terms of s, alpha and a finite basis
 function prior_dist(s, alpha, basis)
     N = length(basis)
     d = GaussianVector(sparse(Diagonal([s * k^(-alpha -0.5) for k in 1:N])))
     
     return GaussianProcess(basis, d)
 end  
-  
+
+# Calculates posterior based on observed data    
 function post_from_data(mod, path, basis; alpha = 0.7, s = 1.0)
     N = length(basis)
     
@@ -69,7 +75,8 @@ function post_from_data(mod, path, basis; alpha = 0.7, s = 1.0)
     
     return calculateposterior(prior, path, mod)
 end  
-  
+
+# Extracts posterior distribution parameters   
 function post_pars(post, x, basis)
     sigma_hat = post.distribution.var
     mu_hat = post.distribution.mean;
@@ -82,7 +89,7 @@ function post_pars(post, x, basis)
 end  
   
   
-  
+# Plots posterior mean along with credible bands.  
 function post_plot(post_mean, post_var; a = 0.05, scale = true)
     
 # calculating pointwise credibility band
