@@ -124,7 +124,6 @@ function check_cov(theta, s, alpha, x, mod, sde, basis;  N = 10^3)
         push!(sim_cov, all(dist .< sim_margin))
         point_cov[i,:] = dist .< point_margin
         
-        # update progress
         next!(prog)
     end
     
