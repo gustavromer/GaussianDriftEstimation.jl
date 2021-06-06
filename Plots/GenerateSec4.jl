@@ -17,7 +17,7 @@ function figure4()
   t_interval = t_interval / ps_per_unit;
   path = SamplePath(t_interval,data);
   # defining model
-  N = 100
+  N = 150
   basis = [rad_fourier(k) for k in 1:N]
   
   mod = SDEModel(1., data[1], t_interval[length(t_interval)], t_interval[2]-t_interval[1]);
