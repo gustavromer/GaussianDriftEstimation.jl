@@ -76,32 +76,6 @@ function emp_bayes_band(mu, basis, x, mod; p = 0.95, N = 10^3,  marg = false)
     
     return sim_simul_band(samps, zeros(length(x)), p = p, marg = marg)
 end    
-              
-# Calculates coverage of credible bands from empirical bayes method.           
-function emp_check_cov(theta, x, mod, sde, basis;  N = 10^3)
-    
-    obs_theta = theta.(x)
-    
-    sim_cov = zeros(N)
-    point_cov = zeros(N, length(x))
-    
-    prog = Progress(N)
-    Threads.@threads for i in 1:N
-        path = rand(sde)
-        ests = empBayes(path, basis)
-        post = post_from_data(mod, path, basis, alpha = ests[2], s = ests[1])
-        pars = post_pars(post, x, basis)
-        sim_margin = simul_band(pars[2])
-        point_margin = point_band(pars[2])
-        dist = abs.(obs_theta - pars[1]) 
-        push!(sim_cov, all(dist .< sim_margin))
-        point_cov[i,:] = dist .< point_margin
-        
-        next!(prog)
-    end
-    
-    return (mean(point_cov, dims = 1), mean(sim_cov))
-end
 
 
 # Check coverage of credible bands based on a fixed prior.                           
