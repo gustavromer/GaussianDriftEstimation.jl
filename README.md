@@ -1,3 +1,3 @@
 # GaussianDriftEstimation
 
-Include GDE.jl. To generate figures from the various sections, run the code contained in the plots folder 'Plots'. Some of the sections are computationally heavy so it might take a while.
+Include GDE.jl. Code for generating figures from the various sections is contained in the folder 'Plots'. Some of the sections are computationally heavy so it might take a while.
