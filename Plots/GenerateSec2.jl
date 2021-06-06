@@ -3,6 +3,7 @@ function figure2()
     
   ### PLOT1 : Empirical distribution of alpha ###  
   
+  # defining drift
   function a(x)
     if x > 2/3
         res = -2/7 + (2/7)x
@@ -25,7 +26,9 @@ function figure2()
   
   prog = Progress(n_obs)
   Threads.@threads for i in 1:n_obs
+      # sample random path
       path = rand(sde)
+      # calculate empBayes estimators
       ests[i,:] = empBayes(path, basis)
       
       # update progress
@@ -119,7 +122,6 @@ function figure2()
   
  ### PLOT  6 : Frequentist Coverage   
   H = check_cov(theta, emp_ests[1], emp_ests[2], x, model, sde, basis,  N = 250)
-  G = emp_check_cov(theta, x, model, sde, basis,  N = 250)
   p6 = plot()
   plot!(p6, x, vec(H[1]), label = "Frequentist Coverage")
   hline!(p6, x, [0.95], linestyle = :dash, linecolor = :black, label = "Bayesian Posterior Coverage",ylims = (0.875,1.0))
