@@ -10,6 +10,7 @@ function figure3()
   emp_pars = empBayes(path, [fourier(k) for k in 1:50]);
   a = 25
   b = 4;
+  # run MCMC
   post = MCMC(path, unit_fourier, iter; j0 = 7, z0 = zeros(7), s_sq0 = emp_pars[1], alpha = emp_pars[2], A = a, B = b, C = log(0.95));
   x = 0:0.01:1
   f = func_from_coeffs(post[2], unit_fourier, x)[500:(iter+1),:];
