@@ -23,7 +23,7 @@ function figure4()
   mod = SDEModel(1., data[1], t_interval[length(t_interval)], t_interval[2]-t_interval[1]);
   
   ### PLOT 1: Quadratic Variation
-  p1 =  plot(t_interval/1.0095,  q_vals, label = "Observed Quadratic Variation", linecolor = :black)
+  p1 =  plot(t_interval,  q_vals, label = "Observed Quadratic Variation", linecolor = :black)
   plot!(p1, [0, 1], [0, 1], seriestype = :straightline, label = "", linecolor = :red, linestyle = :dash)
   plot!(p1, xlab = "Time measured in units of u")
   
