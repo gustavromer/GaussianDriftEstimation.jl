@@ -1,11 +1,11 @@
-# Calculates pointwise confidence sets based on covariance matrix.
+# Calculates pointwise credible sets around posterior mean based on covariance matrix.
 function point_set(sig; p = 0.95)
    a = 1-p
    quantile(Normal(), 1 - a/2) * sqrt.(diag(sig))
 end
 
-# Calculates simultaneous confidence sets by grid-approximation based on covariance matrix.
-function simul_set(sig; p = 0.95, N = 10^4, step = 0.01, max = 50)
+# Calculates simultaneous credible sets by grid-approximation based on covariance matrix.
+function simul_set(sig; p = 0.95, N = 10^4, max = 50)
     sig = Symmetric(sig); d = MvNormal(sig)
     sample = rand(d,N)    
     rect = sqrt.(diag(sig)) / sqrt(sig[1,1]) 
@@ -14,7 +14,7 @@ function simul_set(sig; p = 0.95, N = 10^4, step = 0.01, max = 50)
     return R * rect
 end
 
-# Calculates credible margin around specified posterior mean using samples.   
+# Calculates credible margin around specified posterior mean (mu_vec) using samples (samps).   
 function sim_simul_set(samps, mu_vec; p = 0.95, marg = false)
     N = size(samps, 1)
     dists = [maximum(abs.(samps[i, :] - mu_vec)) for i in 1:N]
@@ -29,7 +29,7 @@ function sim_simul_set(samps, mu_vec; p = 0.95, marg = false)
     return res    
 end  
          
-# Simulates from posterior and calculates credible sets based on simulations.        
+# Simulates from posterior (post) and calculates credible sets on interval (x) based on simulations        
 function fixed_set(post, x; p = 0.95, N = 10^4, marg = false)
     samps = [rand(post).(x0) for i in 1:N, x0 in x]
     mu_vec = mean(post).(x)
