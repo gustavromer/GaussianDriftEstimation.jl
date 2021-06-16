@@ -65,4 +65,4 @@ plot([0.5, 0.75, 1.0, 1.5], s_obs, xlab = L"\alpha", label = "Frequentist Covera
 scatter!([0.5, 0.75, 1.0, 1.5], s_obs, label = ""); hline!([0.95], label = "Posterior Coverage", linestyle = :dash, linecolor = :black,size = (450, 300), dpi = 600);
 savefig("figures/sec2/fig11.png")
               
-### Figures are saved in 'figures/sec2' folder ###        
+### Figures are saved in a 'figures/sec2' folder ###        
