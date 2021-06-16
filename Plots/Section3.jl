@@ -76,4 +76,4 @@ plot(point_plot, legend = :bottomleft, ylim = (0.875,1),size = (450, 300), dpi =
 savefig("figures/sec3/fig11.png")
 
     
-### Figures are saved in a 'figures/sec2' folder ###      
+### Figures are saved in a 'figures/sec3' folder ###      
