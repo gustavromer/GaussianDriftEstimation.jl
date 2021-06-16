@@ -36,7 +36,7 @@ function fixed_set(post, x; p = 0.95, N = 10^4, marg = false)
     return sim_simul_set(samps,mu_vec, p = p, marg = marg)
 end
             
-# Calculates credible sets based on random (alpha, s) samples from empirical Bayes.   
+# Calculates credible sets based on random (alpha, s) samples from empirical Bayes around some mean (mu) using the model (mod).   
 function emp_bayes_set(mu, basis, x, mod; p = 0.95, N = 10^4,  marg = false)
     samps = zeros(N, length(x))   
     sde = SDE(mu, mod)
