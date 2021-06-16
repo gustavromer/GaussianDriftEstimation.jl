@@ -29,18 +29,21 @@ end
 function phi_matrix(x, basis)
 	return [basis[j](x[i]) for i in 1:length(x), j in 1:length(basis)]
 end
+
 # Specifies prior in terms of s, alpha and a basis
 function prior_dist(s, alpha, basis)
     N = length(basis)
     d = GaussianVector(sparse(Diagonal([s * k^(-alpha -0.5) for k in 1:N])))
     return GaussianProcess(basis, d)
 end  
+
 # Calculates posterior based on observed data from a model 
 function post_from_data(mod, path, basis; alpha = 1.5, s = 1.0)
     N = length(basis)
     prior = prior_dist(s, alpha, basis)
     return calculateposterior(prior, path, mod)
 end  
+
 # Extracts (theta(t_1),...,theta(t_n)) | X^T parameters from posterior based on grid and basis
 function post_pars(post, x, basis)
     sigma_hat = post.distribution.var
