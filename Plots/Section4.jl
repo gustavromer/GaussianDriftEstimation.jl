@@ -39,7 +39,7 @@ plot!(x, theta, label = "True Drift", linecolor = :blue, size = (450, 300), dpi 
 savefig("figures/sec4/fig5.png")
 plot()
   
-# Random sample paths
+# Random posterior sample paths
 for i in 1:10 plot!(x, rand(emp_post), label = "", linestyle = :dash) end  
 plot!(x, theta, linecolor = :blue, label = "True Drift", size = (450, 300), dpi = 600); savefig("figures/sec4/fig6.png");
 plot()
