@@ -35,6 +35,8 @@ plot!(size = (400, 300), dpi = 600, legend=:bottomright); savefig("figures/sec5/
 # Hierarchical Bayes
 iter = 3000; post = MCMC(path, rad_fourier, iter; j0 = 1, z0 = 0, s_sq0 = 1, alpha = 1.5, A = 5/2, B = 5/2, C = log(0.95)); 
 f = func_from_coeffs(post[2], rad_fourier, x)[500:(iter+1),:]; take = 500:3001; rm = cumsum(sqrt.(post[3])) ./ (1:3001);
+
+# Traceplots
 plot(take, sqrt.(post[3])[take], xlab = "Iterations", label  = "s : Posterior Samples"); 
 plot!(take, rm[take], label = "Running Mean", linewidth = 1.5,size = (400, 300), dpi = 600,legend = :topleft)
 savefig("figures/sec5/fig7.png")
@@ -43,6 +45,8 @@ savefig("figures/sec5/fig8.png")
 plot(xlab = "Iterations", size = (400, 300), dpi = 600,legend = :topleft)
 for i in [315, 367, 472] plot!(1:size(f,1), f[:,315], label = string(-pi + i / 100)) end
 savefig("figures/sec5/fig9.png")
+  
+# Confidence bands and posterior mean based on samples
 mu = vec(mean(f, dims = 1)), band = sim_simul_band(f, mu; p = 0.68, marg = true);
 plot(x, mu, ribbon = mu .- band[1], label = "", fill = 0.25, fillcolor = :red), plot!(x, band[2], label = "", linecolor = :red, linestyle = :dash)
 plot!(x, mu, label = "Posterior Mean", linecolor = :black, ylim = (-4,4),size = (400, 300), dpi = 600, legend=:bottomright)
