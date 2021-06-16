@@ -46,3 +46,5 @@ plot()
 for i in 1:10 plot!(g, x, f[2141-i,:], label = "", linestyle = :dash) end 
 plot!(x, theta, linecolor = :blue, label = "True Drift",size = (450, 300), dpi = 600)
 savefig("figures/sec4/fig7.png")
+
+### Figures are saved in a 'figures/sec4' folder ###   
