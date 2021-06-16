@@ -41,6 +41,7 @@ function MCMC(path, basis_fnc, iter; j0, z0, s_sq0, alpha, A, B, C)
     end
     return (j_chain, z_chain, s_sq_chain)        
 end
+    
 # Calculates posterior realizations from MCMC z-observations on the grid x given a basis
 function func_from_coeffs(z_array, basis, x)
     M = maximum(length.(z_array))    
