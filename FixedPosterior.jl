@@ -37,7 +37,7 @@ function prior_dist(s, alpha, basis)
     return GaussianProcess(basis, d)
 end  
 
-# Calculates posterior based on observed data (path) from a model (mod) 
+# Calculates posterior based on observed data (path) from a model (mod) with basis (basis)
 function post_from_data(mod, path, basis; alpha = 1.5, s = 1.0)
     N = length(basis)
     prior = prior_dist(s, alpha, basis)
