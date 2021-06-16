@@ -6,7 +6,6 @@ function likelog(G_vec, G_matrix; s = 1, alpha = 1.5)
     B =  inv(Lambda) + G_matrix
     V = inv(B)
     return dot(G_vec, V * G_vec) - logdet(Lambda) - logdet(B)
-    
 end
     
 # Calculates the empirical bayes estimator based on sample path and specified basis.
