@@ -25,21 +25,9 @@ function giraVector(path, basis)
 	return [vectorElement(x_vals, basis[i]) for i in 1:N]
 end    
 
-# Calculates A_n    
-function phi_matrix(x, basis)
-    res = zeros(length(x), length(basis));
-    for i in 1:length(x)
-       for j in 1:length(basis)
-            res[i,j] = basis[j](x[i])
-        end
-    end
-    
-    return res
-end
-
 # Calculates A_n with grid and basisfunctions as input
 function phi_matrix(x, basis)
-	return [basis[j](x[i]) for i in 1:length(x), j in length(basis)]
+	return [basis[j](x[i]) for i in 1:length(x), j in 1:length(basis)]
 end
 # Specifies prior in terms of s, alpha and a basis
 function prior_dist(s, alpha, basis)
