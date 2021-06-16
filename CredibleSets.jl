@@ -3,6 +3,7 @@ function point_set(sig; p = 0.95)
    a = 1-p
    quantile(Normal(), 1 - a/2) * sqrt.(diag(sig))
 end
+
 # Calculates simultaneous confidence sets by grid-approximation based on covariance matrix.
 function simul_set(sig; p = 0.95, N = 10^4, step = 0.01, max = 50)
     sig = Symmetric(sig); d = MvNormal(sig)
@@ -12,6 +13,7 @@ function simul_set(sig; p = 0.95, N = 10^4, step = 0.01, max = 50)
     R = find_zero(f, (0, max))    
     return R * rect
 end
+
 # Calculates credible margin around specified posterior mean using samples.   
 function sim_simul_set(samps, mu_vec; p = 0.95, marg = false)
     N = size(samps, 1)
@@ -26,12 +28,14 @@ function sim_simul_set(samps, mu_vec; p = 0.95, marg = false)
     end        
     return res    
 end  
+         
 # Simulates from posterior and calculates credible sets based on simulations.        
 function fixed_set(post, x; p = 0.95, N = 10^4, marg = false)
     samps = [rand(post).(x0) for i in 1:N, x0 in x]
     mu_vec = mean(post).(x)
     return sim_simul_set(samps,mu_vec, p = p, marg = marg)
 end
+            
 # Calculates credible sets based on random (alpha, s) samples from empirical Bayes.   
 function emp_bayes_set(mu, basis, x, mod; p = 0.95, N = 10^4,  marg = false)
     samps = zeros(N, length(x))   
@@ -43,7 +47,8 @@ function emp_bayes_set(mu, basis, x, mod; p = 0.95, N = 10^4,  marg = false)
         samps[i, :] = rand(post).(x) - mean(post).(x)
     end    
     return sim_simul_set(samps, zeros(length(x)), p = p, marg = marg)
-end     
+end  
+                  
 # Check coverage of credible sets given a true parameter and a prior.                          
 function check_cov(theta, s, alpha, x, mod, sde, basis;  N = 10^4)    
     obs_theta = theta.(x)    
