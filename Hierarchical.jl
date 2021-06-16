@@ -1,4 +1,5 @@
-# Runs MCMC based on proposal q(i +- 1 | i) = 1/4, q(i|i) = 1/2. C refers to log(1-p). Returns list of posterior J, s and z observations.
+# Runs MCMC based on proposal q(i +- 1 | i) = 1/4, q(i|i) = 1/2. C refers to log(1-p). A, B are parameters of IG-distribution.
+#Returns list of posterior J, s and z observations.
 function MCMC(path, basis_fnc, iter; j0, z0, s_sq0, alpha, A, B, C)  
     x_vals = path.samplevalues; dt = path.timeinterval[2] - path.timeinterval[1];
     N = j0 
