@@ -1,9 +1,9 @@
-# Calculates S_i
+# Calculates S_i based on X^T, basis functions b1,b2 and timechange dt.
 function matrixElement(x_vals, b1, b2, dt)
 	return sum(b1.(x_vals) .* b2.(x_vals) * dt)
 end
 
-# Calculates S 
+# Calculates S from sample path and basis
 function giraMatrix(path, basis)
 	N =  length(basis)
 	Sig = Array{Float64}(undef, N, N) 
@@ -13,12 +13,12 @@ function giraMatrix(path, basis)
 	return Symmetric(Sig) 
 end
 
-# Calculates m_i
+# Calculates m_i based on X^T vals
 function vectorElement(x_vals, b)
 	return sum(b.(x_vals[1:(length(x_vals)-1)]) .* diff(x_vals)))
     end    
     
-# Calculates m 
+# Calculates m from sample path and basis
 function giraVector(path, basis)
 	x_vals = path.samplevalues	
 	N =  length(basis)
