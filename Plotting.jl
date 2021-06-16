@@ -14,7 +14,7 @@ function post_plot(post_mean, post_var; a = 0.05, scale = true)
         label = "")
 end
 
-# Same plot but with a prior as input. Th specifies true theta.
+# Same plot but with a prior (s,a) and a sample path as input. Th specifies true theta.
 function calc_plot(s, a, path, th)
     str = latexstring("\$ s = $(s), \\alpha = $(a) \$")
     post = post_from_data(mod, path, basis; alpha = a, s = s)
