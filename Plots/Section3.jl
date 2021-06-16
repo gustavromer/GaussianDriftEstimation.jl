@@ -74,3 +74,6 @@ end
 hline!([0.95], label = "Bayesian Posterior Coverage", linestyle = :dash, linecolor = :black);
 plot(point_plot, legend = :bottomleft, ylim = (0.875,1),size = (450, 300), dpi = 600)
 savefig("figures/sec3/fig11.png")
+
+    
+### Figures are saved in a 'figures/sec2' folder ###      
