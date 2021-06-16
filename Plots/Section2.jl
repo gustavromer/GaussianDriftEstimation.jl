@@ -42,12 +42,12 @@ s_vec = [0.05, 0.1, 100]; alpha_vec = [0.5, 1.0, 1.5];
 sde = SDE(theta, mod); sde_2 = SDE(theta_2, mod), path = rand(sde); path_2 = rand(sde_2)
 p1 = []; p2 = [];
 for a in alpha_vec
-    push!(p1, calc_plot(1.0, a, path, theta))
-    push!(p2, calc_plot(1.0, a, path_2, theta_2))
+    push!(p1, calc_plot(1.0, a, path, theta, mod, basis))
+    push!(p2, calc_plot(1.0, a, path_2, theta_2, mod, basis))
 end
 for s in s_vec
-    push!(p1, calc_plot(s, 1.5, path, theta))
-    push!(p2, calc_plot(s, 1.5, path_2, theta_2))
+    push!(p1, calc_plot(s, 1.5, path, theta, mod, basis))
+    push!(p2, calc_plot(s, 1.5, path_2, theta_2, mod, basis))
 end
 plot(p1..., layout = (2,3),size = (1062.5, 500), dpi = 600); savefig("figures/sec2/fig8.png");
 plot(p2..., layout = (2,3),size = (1062.5, 500), dpi = 600); savefig("figures/sec2/fig9.png");
