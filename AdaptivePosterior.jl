@@ -54,7 +54,7 @@ function func_from_coeffs(z_array, basis, x)
     return res
 end   
 
-# Returns (1/2) log p(X^T) given s and alpha
+# Returns (1/2) log p(X^T) given S, m, s and alpha 
 function likelog(G_vec, G_matrix; s = 1, alpha = 1.5)
     N = length(G_vec)
     Lambda = Diagonal([s^2 * k^(-2.0 * alpha - 1.0) for k in 1:N]) 
@@ -64,7 +64,7 @@ function likelog(G_vec, G_matrix; s = 1, alpha = 1.5)
     
 end
     
-# Calculates the empirical bayes estimator
+# Calculates the empirical bayes estimator based on sample path and specified basis.
 function empBayes(path, basis)
     G_vec = giraVector(path, basis)
     G_matrix = giraMatrix(path, basis)
