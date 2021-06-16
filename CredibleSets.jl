@@ -1,10 +1,10 @@
-# Calculates pointwise credible sets around posterior mean based on covariance matrix.
+# Calculates pointwise credible sets around posterior mean based on covariance matrix (sig).
 function point_set(sig; p = 0.95)
    a = 1-p
    quantile(Normal(), 1 - a/2) * sqrt.(diag(sig))
 end
 
-# Calculates simultaneous credible sets by grid-approximation based on covariance matrix.
+# Calculates simultaneous credible sets by grid-approximation based on covariance matrix (sig).
 function simul_set(sig; p = 0.95, N = 10^4, max = 50)
     sig = Symmetric(sig); d = MvNormal(sig)
     sample = rand(d,N)    
@@ -49,7 +49,7 @@ function emp_bayes_set(mu, basis, x, mod; p = 0.95, N = 10^4,  marg = false)
     return sim_simul_set(samps, zeros(length(x)), p = p, marg = marg)
 end  
                   
-# Check coverage of credible sets given a true parameter and a prior.                          
+# Check coverage of credible sets given a true parameter (theta) a prior (s, alpha) annd a model (mod, sde).                          
 function check_cov(theta, s, alpha, x, mod, sde, basis;  N = 10^4)    
     obs_theta = theta.(x)    
     sim_cov = zeros(N)
