@@ -49,7 +49,7 @@ function emp_bayes_set(mu, basis, x, mod; p = 0.95, N = 10^4,  marg = false)
     return sim_simul_set(samps, zeros(length(x)), p = p, marg = marg)
 end  
                   
-# Check coverage of credible sets given a true parameter (theta) a prior (s, alpha) annd a model (mod, sde).                          
+# Check coverage of credible sets given a true parameter (theta) a prior (s, alpha) and a model (mod, sde).                          
 function check_cov(theta, s, alpha, x, mod, sde, basis;  N = 10^4)    
     obs_theta = theta.(x)    
     sim_cov = zeros(N)
