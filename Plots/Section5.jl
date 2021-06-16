@@ -51,3 +51,5 @@ mu = vec(mean(f, dims = 1)), band = sim_simul_band(f, mu; p = 0.68, marg = true)
 plot(x, mu, ribbon = mu .- band[1], label = "", fill = 0.25, fillcolor = :red), plot!(x, band[2], label = "", linecolor = :red, linestyle = :dash)
 plot!(x, mu, label = "Posterior Mean", linecolor = :black, ylim = (-4,4),size = (400, 300), dpi = 600, legend=:bottomright)
 savefig("figures/sec5/fig3.png")
+  
+### Figures are saved in a 'figures/sec5' folder ###   
