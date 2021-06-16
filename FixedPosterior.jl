@@ -25,7 +25,7 @@ function giraVector(path, basis)
 	return [vectorElement(x_vals, basis[i]) for i in 1:N]
 end    
 
-# Calculates A_n with grid and basisfunctions as input
+# Calculates A_n with grid (x) and basisfunctions (basis) as input
 function phi_matrix(x, basis)
 	return [basis[j](x[i]) for i in 1:length(x), j in 1:length(basis)]
 end
@@ -37,14 +37,14 @@ function prior_dist(s, alpha, basis)
     return GaussianProcess(basis, d)
 end  
 
-# Calculates posterior based on observed data from a model 
+# Calculates posterior based on observed data (path) from a model (mod) 
 function post_from_data(mod, path, basis; alpha = 1.5, s = 1.0)
     N = length(basis)
     prior = prior_dist(s, alpha, basis)
     return calculateposterior(prior, path, mod)
 end  
 
-# Extracts (theta(t_1),...,theta(t_n)) | X^T parameters from posterior based on grid and basis
+# Extracts (theta(t_1),...,theta(t_n)) | X^T parameters from posterior (post) based on grid (x) and basis
 function post_pars(post, x, basis)
     sigma_hat = post.distribution.var
     mu_hat = post.distribution.mean;
