@@ -37,57 +37,28 @@ function phi_matrix(x, basis)
     return res
 end
 
-# Specifies prior in terms of s, alpha and a finite basis
+# Calculates A_n with grid and basisfunctions as input
+function phi_matrix(x, basis)
+	return [basis[j](x[i]) for i in 1:length(x), j in length(basis)]
+end
+# Specifies prior in terms of s, alpha and a basis
 function prior_dist(s, alpha, basis)
     N = length(basis)
     d = GaussianVector(sparse(Diagonal([s * k^(-alpha -0.5) for k in 1:N])))
-    
     return GaussianProcess(basis, d)
 end  
-
-# Calculates posterior based on observed data    
-function post_from_data(mod, path, basis; alpha = 0.7, s = 1.0)
+# Calculates posterior based on observed data from a model 
+function post_from_data(mod, path, basis; alpha = 1.5, s = 1.0)
     N = length(basis)
-    
     prior = prior_dist(s, alpha, basis)
-    
     return calculateposterior(prior, path, mod)
 end  
-
-# Extracts posterior distribution parameters   
+# Extracts (theta(t_1),...,theta(t_n)) | X^T parameters from posterior based on grid and basis
 function post_pars(post, x, basis)
     sigma_hat = post.distribution.var
     mu_hat = post.distribution.mean;
-    
     phi = phi_matrix(x, basis)
-
     post_mean = phi * mu_hat
     post_var = phi * sigma_hat * transpose(phi)
     return (post_mean, post_var)
 end  
-  
-  
-# Plots posterior mean along with credible bands.  
-function post_plot(post_mean, post_var; a = 0.05, scale = true)
-    
-    # calculating pointwise credible band
-    pointwise_CB = point_band(post_var, p = 1 -a)
-    # calculating sim credible band
-    joint_rect = simul_band(post_var, scale = scale, p = 1 - a)
-    
-    p = plot()
-    # plotting mean and pointwise credible band
-    plot!(p, x, post_mean, 
-        ribbon = pointwise_CB, 
-        label = "Posterior Mean", 
-        fillalpha=.2,
-        linecolor  = :black,
-        fillcolor = :red)
-    # plotting simultaneous credible band
-    plot!(p, x, [post_mean + joint_rect, post_mean - joint_rect], 
-        linecolor  = :red,
-        linestyle = :dash,
-        label = "")
-    
-end  
-  
