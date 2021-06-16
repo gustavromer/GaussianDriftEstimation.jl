@@ -46,7 +46,7 @@ plot(xlab = "Iterations", size = (400, 300), dpi = 600,legend = :topleft)
 for i in [315, 367, 472] plot!(1:size(f,1), f[:,315], label = string(-pi + i / 100)) end
 savefig("figures/sec5/fig9.png")
   
-# Confidence bands and posterior mean based on samples
+# Credible sets and posterior mean based on samples
 mu = vec(mean(f, dims = 1)), band = sim_simul_band(f, mu; p = 0.68, marg = true);
 plot(x, mu, ribbon = mu .- band[1], label = "", fill = 0.25, fillcolor = :red), plot!(x, band[2], label = "", linecolor = :red, linestyle = :dash)
 plot!(x, mu, label = "Posterior Mean", linecolor = :black, ylim = (-4,4),size = (400, 300), dpi = 600, legend=:bottomright)
