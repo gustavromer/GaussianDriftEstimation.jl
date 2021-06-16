@@ -4,6 +4,7 @@ function MCMC(path, basis_fnc, iter; j0, z0, s_sq0, alpha, A, B, C)
     N = j0 
     init_basis = [basis_fnc(k) for k in 1:N]
     W = sig + (1/s_sq0) * Lambda_inv    
+    
     # Initialization    
     j_chain = [j0]; z_chain = [z0]; s_sq_chain = [s_sq0] 
     j = j0;z = z0;s_sq = s_sq0
@@ -11,8 +12,10 @@ function MCMC(path, basis_fnc, iter; j0, z0, s_sq0, alpha, A, B, C)
         # Gibbs sampler: s^2
         s_sq = 1 / rand(Gamma(A + (1/2)j, (B + (1/2) transpose(z) * Lambda_inv[1:j, 1:j] * z )^(-1) ))
         push!(s_sq_chain, s_sq)
+        
         # MH step: J
         j_it = sample([j - 1, j, j + 1], Weights([0.25, 0.5, 0.25]), 1)[1]
+        
         # Expand current basis by 10 when j increases
         if j_it > j
             new_N = N + 10; new_mu = zeros(new_N);  new_mu[1:N] = mu;                     
@@ -28,6 +31,7 @@ function MCMC(path, basis_fnc, iter; j0, z0, s_sq0, alpha, A, B, C)
         W = sig + (1/s_sq) * Lambda_inv
         inv_W_it = inv(W[1:j_it, 1:j_it]); inv_W = inv(W[1:j, 1:j]);   
         mu_it = mu[1:j_it]
+        
         # Gibbs sampler: z_1,...,z_J
         z_it = rand(MvNormal(inv_W_it * mu_it, Symmetric(inv_W_it)))
         rest = sign(j_it - j) * (2alpha + 1) * log(max(j, j_it)) + (j - j_it) * log(s_sq)
@@ -35,7 +39,8 @@ function MCMC(path, basis_fnc, iter; j0, z0, s_sq0, alpha, A, B, C)
             (transpose(mu[1:j])* inv_W * mu[1:j] - logdet(W[1:j, 1:j])) + rest)    
         logR_it = C * (j_it - j) 
         accept_p = exp(logB_it + logR_it)
-        # Acceptance / Rejection step
+        
+        # Acceptance / Rejection step      
         if rand(Uniform()) < accept_p j = j_it; z = z_it; end
         push!(j_chain, j); push!(z_chain, z);
     end
