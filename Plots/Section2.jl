@@ -1,5 +1,13 @@
-theta(t) = sinpi(2t) - cospi(8t); theta_2(t) = sinpi(2t), x = 0:0.01:1; basis = [unit_fourier(k) for k in 0:49]
-mod = SDEModel(1.0, 0.0, 2000., 0.01); sde = SDE(theta, mod); path  = rand(sde);
+# Specify models
+theta(t) = sinpi(2t) - cospi(8t); theta_2(t) = sinpi(2t), 
+# grid for plotting/approximation
+x = 0:0.01:1; 
+basis = [unit_fourier(k) for k in 0:49]
+mod = SDEModel(1.0, 0.0, 2000., 0.01); sde = SDE(theta, mod);
+#simulate sample path
+path  = rand(sde);
+
+# sample path plot
 plot(path.timeinterval, path.samplevalues, label = "Observed Sample Path", linecolor = "black", size = (400, 300), dpi = 600)
 savefig("figures/sec2/fig4.png")
 post = post_from_data(mod, path, basis; alpha = 0.75); pars = post_pars(post, x, basis);
@@ -18,12 +26,14 @@ plot!(x , sim_joint_rect[1][:,1] - pars[1], label = "Simulated Pointwise Band", 
 plot!(x , sim_joint_rect[1][:,2] - pars[1], label = "", linecolor = :red, linestyle = :dashdotdot)
 plot!(x, x -> 0.,linecolor  = :black, linestyle = :solid,label = "Posterior Mean Reference", legend=:inside, size = (400, 300), dpi = 600)
 savefig("figures/sec2/fig6.png")
+# Check coverage of sets
 coverage_check = check_cov(theta, 1.0, 0.50, x, mod, sde, basis,  N = 10^3)
 freq_point = plot(x, vec(coverage_check[1]), label = "Frequentist Coverage",ylims = (0.875,1.0))
 hline!(freq_point, [0.95], label = "Bayesian Posterior Coverage", linestyle = :dash, linecolor = :black,
 legend = :bottomleft)
 plot!(size = (450, 300), dpi = 600)
 savefig("figures/sec2/fig7.png")
+# Try out different priors
 s_vec = [0.05, 0.1, 100]; alpha_vec = [0.5, 1.0, 1.5];
 sde = SDE(theta, mod); sde_2 = SDE(theta_2, mod), path = rand(sde); path_2 = rand(sde_2)
 p1 = []; p2 = [];
