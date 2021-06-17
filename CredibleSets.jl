@@ -4,7 +4,7 @@ function point_set(sig; p = 0.95)
    quantile(Normal(), 1 - a/2) * sqrt.(diag(sig))
 end
 
-# Calculates simultaneous credible sets by grid-approximation based on covariance matrix (sig).
+# Calculates simultaneous credible sets around posterior mean by grid-approximation based on covariance matrix (sig).
 function simul_set(sig; p = 0.95, N = 10^4, max = 50)
     sig = Symmetric(sig); d = MvNormal(sig)
     sample = rand(d,N)    
@@ -36,7 +36,7 @@ function fixed_set(post, x; p = 0.95, N = 10^4, marg = false)
     return sim_simul_set(samps,mu_vec, p = p, marg = marg)
 end
             
-# Calculates credible sets based on random (alpha, s) samples from empirical Bayes around some mean (mu) using the model (mod).   
+# Calculates credible sets based on random (alpha, s) samples from empirical Bayes for some model (mod) with drift (mu).   
 function emp_bayes_set(mu, basis, x, mod; p = 0.95, N = 10^4,  marg = false)
     samps = zeros(N, length(x))   
     sde = SDE(mu, mod)
