@@ -36,17 +36,18 @@ function fixed_set(post, x; p = 0.95, N = 10^4, marg = false)
     return sim_simul_set(samps,mu_vec, p = p, marg = marg)
 end
             
-# Calculates credible sets based on random (alpha, s) samples from empirical Bayes for some model (mod) with drift (mu) and a sample-path (path)   
-function emp_bayes_set(mu, basis, x, mod, path; p = 0.95, N = 10^4,  marg = false)
+# Calculates credible sets based on random empBayes samples (est_samples). For the posterior basis, model (mod), observed path (path) and interval (x) are specified.  
+function emp_bayes_set(est_samples, basis, mod, path, x; p = 0.95, N = 10^4,  marg = false)
     samps = zeros(N, length(x))   
     sde = SDE(mu, mod)
-    for i in 1:N
-        bayes_est = empBayes(rand(sde), basis)    
-        post = post_from_data(mod, path,  basis, alpha = bayes_est[2],  s = bayes_est[1])
+    for i in 1:N 
+        post = post_from_data(mod, path, basis, alpha = est_samples[i,2],  s = est_samples[i,1])
         samps[i, :] = rand(post).(x)
     end    
     return sim_simul_set(samps, zeros(length(x)), p = p, marg = marg)
 end  
+                  
+                  
                   
 # Check coverage of credible sets given a true parameter (theta) a prior (s, alpha) and a model (mod, sde).                          
 function check_cov(theta, s, alpha, x, mod, sde, basis;  N = 10^4)    
