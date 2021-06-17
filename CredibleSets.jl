@@ -1,11 +1,11 @@
 # Calculates pointwise credible sets around posterior mean based on covariance matrix (sig).
-function point_set(sig; p = 0.95)
+function point_band(sig; p = 0.95)
    a = 1-p
    quantile(Normal(), 1 - a/2) * sqrt.(diag(sig))
 end
 
 # Calculates simultaneous credible sets around posterior mean by grid-approximation based on covariance matrix (sig).
-function simul_set(sig; p = 0.95, N = 10^4, max = 50)
+function simul_band(sig; p = 0.95, N = 10^4, max = 50)
     sig = Symmetric(sig); d = MvNormal(sig)
     sample = rand(d,N)    
     rect = sqrt.(diag(sig)) / sqrt(sig[1,1]) 
@@ -15,7 +15,7 @@ function simul_set(sig; p = 0.95, N = 10^4, max = 50)
 end
 
 # Calculates credible margin around specified posterior mean (mu_vec) using samples (samps).   
-function sim_simul_set(samps, mu_vec; p = 0.95, marg = false)
+function sim_simul_band(samps, mu_vec; p = 0.95, marg = false)
     N = size(samps, 1)
     dists = [maximum(abs.(samps[i, :] - mu_vec)) for i in 1:N]
     ranks = sortperm(dists)[1:ceil(Int, p * N)]
@@ -30,22 +30,22 @@ function sim_simul_set(samps, mu_vec; p = 0.95, marg = false)
 end  
          
 # Simulates from posterior (post) and calculates credible sets on interval (x) based on simulations        
-function fixed_set(post, x; p = 0.95, N = 10^4, marg = false)
+function fixed_band(post, x; p = 0.95, N = 10^4, marg = false)
     samps = [rand(post).(x0) for i in 1:N, x0 in x]
     mu_vec = mean(post).(x)
-    return sim_simul_set(samps,mu_vec, p = p, marg = marg)
+    return sim_simul_band(samps,mu_vec, p = p, marg = marg)
 end
             
 # Calculates credible sets based on random empBayes samples (est_samples). For the posterior
 # basis, model (mod), observed path (path) and interval (x) are specified.  
-function emp_bayes_set(est_samples, basis, mod, path, x; p = 0.95, N = 10^4,  marg = false)
-    samps = zeros(N, length(x))   
+function emp_bayes_band(est_samples, basis, mod, path, x; p = 0.95, marg = false)
+    samps = zeros(size(est_samples, 1), length(x))   
     sde = SDE(mu, mod)
     for i in 1:N 
         post = post_from_data(mod, path, basis, alpha = est_samples[i,2],  s = est_samples[i,1])
         samps[i, :] = rand(post).(x)
     end    
-    return sim_simul_set(samps, zeros(length(x)), p = p, marg = marg)
+    return sim_simul_band(samps, zeros(length(x)), p = p, marg = marg)
 end  
                   
                   
@@ -59,7 +59,7 @@ function check_cov(theta, s, alpha, x, mod, sde, basis;  N = 10^4)
         path = rand(sde)
         post = post_from_data(mod, path, basis, alpha = alpha, s = s)
         pars = post_pars(post, x, basis)
-        sim_margin = simul_set(pars[2]); point_margin = point_set(pars[2])
+        sim_margin = simul_band(pars[2]); point_margin = point_band(pars[2])
         dist = abs.(obs_theta - pars[1]) 
         push!(sim_cov, all(dist .< sim_margin))
         point_cov[i,:] = dist .< point_margin
