@@ -14,7 +14,7 @@ x = 0:0.01:1; model = SDEModel(1.0, 0.0, 1000., 0.01); sde = SDE(theta, model);
     
 # Sample empirical bayes estimator
 n_obs = 500; ests = zeros(n_obs, 2); 
-for i in 1:n_obs path = rand(sde);ests[i,:] = empBayes(path, basis); end
+for i in 1:n_obs path = rand(sde); ests[i,:] = empBayes(path, basis); end
 histogram(ests[:,2], bins = 20,label = "", xlab = L"\hat{\alpha}", alpha = 0.65)
 plot!([1.5], seriestype="vline",linestyle = :dash, linewidth = 1.5, label = "True Holder Exponent", legend=:topleft,linecolor = :red,size = (450, 350), dpi = 600)
 savefig("figures/sec3/fig1.png")
@@ -41,7 +41,7 @@ emp_post = post_from_data(model, path, basis; alpha = emp_ests[2], s = emp_ests[
 u_fixed = fixed_band(emp_post, x; p = 0.95, N = 10^4, marg = true); u_calc = simul_band(emp_pars[2]);
 
 # Credible set based on fixed empirical Bayes estimator and random estimator samples 
-u = emp_bayes_band(mean(emp_post), basis, x, model, path; p = 0.95, N = 10^4, marg = true);
+u = emp_bayes_band(ests, basis, mod, path, x);
 plot(x, emp_pars[1] .+ u[2][:,1], linecolor = :red, linestyle = :dash, label = "Random Prior: Simultaneous Band")
 plot!(x, emp_pars[1] .+ u[2][:,2], linecolor = :red, linestyle = :dash, label = "")
 plot!(x, u_fixed[2][:,1], linecolor = :blue, label = "", linestyle = :dash)
