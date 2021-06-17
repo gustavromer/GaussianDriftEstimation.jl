@@ -41,7 +41,7 @@ emp_post = post_from_data(model, path, basis; alpha = emp_ests[2], s = emp_ests[
 u_fixed = fixed_band(emp_post, x; p = 0.95, N = 10^3, marg = true); u_calc = simul_band(emp_pars[2]);
 
 # Credible set based on fixed empirical Bayes estimator and random estimator samples 
-u = emp_bayes_band(mean(emp_post), basis, x, model; p = 0.95, N = 750, marg = true);
+u = emp_bayes_band(mean(emp_post), basis, x, model, path; p = 0.95, N = 1000, marg = true);
 plot(x, emp_pars[1] .+ u[2][:,1], linecolor = :red, linestyle = :dash, label = "Random Prior: Simultaneous Band")
 plot!(x, emp_pars[1] .+ u[2][:,2], linecolor = :red, linestyle = :dash, label = "")
 plot!(x, u_fixed[2][:,1], linecolor = :blue, label = "", linestyle = :dash)
