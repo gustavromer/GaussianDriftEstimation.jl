@@ -36,15 +36,14 @@ function fixed_set(post, x; p = 0.95, N = 10^4, marg = false)
     return sim_simul_set(samps,mu_vec, p = p, marg = marg)
 end
             
-# Calculates credible sets based on random (alpha, s) samples from empirical Bayes for some model (mod) with drift (mu).   
-function emp_bayes_set(mu, basis, x, mod; p = 0.95, N = 10^4,  marg = false)
+# Calculates credible sets based on random (alpha, s) samples from empirical Bayes for some model (mod) with drift (mu) and a sample-path (path)   
+function emp_bayes_set(mu, basis, x, mod, path; p = 0.95, N = 10^4,  marg = false)
     samps = zeros(N, length(x))   
     sde = SDE(mu, mod)
-    or_path = rand(sde)
     for i in 1:N
         bayes_est = empBayes(rand(sde), basis)    
-        post = post_from_data(mod, or_path,  basis, alpha = bayes_est[2],  s = bayes_est[1])
-        samps[i, :] = rand(post).(x) - mean(post).(x)
+        post = post_from_data(mod, path,  basis, alpha = bayes_est[2],  s = bayes_est[1])
+        samps[i, :] = rand(post).(x)
     end    
     return sim_simul_set(samps, zeros(length(x)), p = p, marg = marg)
 end  
