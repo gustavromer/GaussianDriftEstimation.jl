@@ -1,7 +1,7 @@
 # Plots posterior mean along with credible sets from posterior mean and variance of (theta(t_1), ..., theta(t_n))  
 function post_plot(post_mean, post_var; a = 0.05, scale = true)
-    pointwise_CB = point_set(post_var, p = 1 -a)
-    joint_rect = simul_set(post_var, scale = scale, p = 1 - a)
+    pointwise_CB = point_band(post_var, p = 1 -a)
+    joint_rect = simul_band(post_var, scale = scale, p = 1 - a)
     p =  plot(x, post_mean, 
             ribbon = pointwise_CB, 
             label = "Posterior Mean", 
