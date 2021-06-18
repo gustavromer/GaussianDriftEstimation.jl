@@ -23,7 +23,7 @@ scatter(ests[:,2], ests[:,1], xlab = L"\hat{\alpha}",ylab = L"\hat{s}", label = 
 # Plot different posterior means for different priors
 n_curves = 20; pars = [(1, 2.5), (1, 0.5), (20, 2)];
 plots = [plot(), plot(), plot(), plot()];
-for i=1:n_curves, j=1:4
+for i in 1:n_curves, j in 1:4
     path = rand(sde);
     if j == 4 (s, a) = empBayes(path, basis) else (s, a) = pars[j] end
     post = post_from_data(model, path, basis, s = s_emp, alpha = a_emp)
