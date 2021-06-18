@@ -14,7 +14,10 @@ x = 0:0.01:1; model = SDEModel(1.0, 0.0, 1000., 0.01); sde = SDE(theta, model);
     
 # Sample empirical bayes estimator
 n_obs = 500; ests = zeros(n_obs, 2); 
-for i in 1:n_obs path = rand(sde); ests[i,:] = empBayes(path, basis); end
+for i in 1:n_obs 
+    ests[i,:] = empBayes(rand(sde), basis); 
+end
+    
 histogram(ests[:,2], bins = 20,label = "", xlab = L"\hat{\alpha}", alpha = 0.65)
 plot!([1.5], seriestype="vline",linestyle = :dash, linewidth = 1.5, label = "True Holder Exponent", legend=:topleft,linecolor = :red,size = (450, 350), dpi = 600)
 savefig("figures/sec3/fig1.png")
