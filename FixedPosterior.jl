@@ -7,7 +7,7 @@ end
 function giraMatrix(path, basis)
 	N =  length(basis)
 	Sig = Array{Float64}(undef, N, N) 
-	for i=1:N, j=1:N
+	for i in 1:N, j in 1:N
 		Sig[i,j] = matrixElement(path.samplevalues, basis[i], basis[j], path.timeinterval[2] - path.timeinterval[1])
 	end
 	return Symmetric(Sig) 
