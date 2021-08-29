@@ -4,7 +4,7 @@ function unit_fourier(k)
   if k == 0
     return x -> 1.0
   elseif isodd(k)
-    return x -> sqrt_two*sinpi(float(k+1)*x)
+    return x -> sqrt(2.0) * sinpi(float(k+1)*x)
   else
     return x -> sqrt(2.0) * cospi(float(k)*x)
   end
