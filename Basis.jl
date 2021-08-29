@@ -1,4 +1,5 @@
 # specifies Fourier ONS on [0,1]
+# Example 
 function unit_fourier(k)
   sqrt_two = sqrt(2.0) 
   if k == 0
