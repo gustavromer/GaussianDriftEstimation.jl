@@ -15,8 +15,8 @@ function rad_fourier(k)
   if k == 0
     return x -> 1/ sqrt(2pi)
   elseif isodd(k)
-    return x -> sin(float(k+1)*x / 2.) / sqrt(pi)
+    return x -> sin(float(k+1)*x / 2.0) / sqrt(pi)
   else
-    return x -> cos(float(k)*x / 2.) / sqrt(pi)
+    return x -> cos(float(k)*x / 2.0) / sqrt(pi)
   end
 end
