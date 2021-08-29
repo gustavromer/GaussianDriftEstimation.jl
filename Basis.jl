@@ -6,7 +6,7 @@ function unit_fourier(k)
   elseif isodd(k)
     return x -> sqrt_two*sinpi(float(k+1)*x)
   else
-    return x -> sqrt_two*cospi(float(k)*x)
+    return x -> sqrt(2.0) * cospi(float(k)*x)
   end
 end
 
